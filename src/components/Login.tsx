@@ -4,15 +4,24 @@ import { auth, provider } from '../util/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 function Login() {
+
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(username, password);
+    }
+
     return (
         <LoginContainer>
-            <LoginForm>
+            <LoginForm onSubmit={e => handleSubmit(e)}>
                 <LoginHeader>LOGIN</LoginHeader>
-                <UsernameLabel>Username</UsernameLabel>
-                <UsernameInput placeholder="username..." />
-                <PasswordLabel>Password</PasswordLabel>
-                <PasswordInput placeholder="password..." />
-                <LoginButton>LOGIN</LoginButton>
+                <UsernameLabel>Email:</UsernameLabel>
+                <UsernameInput required placeholder="email..." onChange={e => setUsername(e.target.value)} />
+                <PasswordLabel>Password:</PasswordLabel>
+                <PasswordInput required type="password" placeholder="password..." onChange={e => setPassword(e.target.value)} />
+                <LoginButton onClick={e => handleSubmit(e)}>LOGIN</LoginButton>
             </LoginForm>
         </LoginContainer>
     )
@@ -20,10 +29,8 @@ function Login() {
 
 const LoginContainer = styled.div`
     width: 100%;
-    height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
 `;
 
 const LoginForm = styled.form`

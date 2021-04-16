@@ -2,8 +2,10 @@ import './App.css';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from './util/firebase';
 
+import { BrowserRouter as Router, Link, Switch, Route } from 'react-router-dom';
+
 // Components
-import Login from './components/Login';
+import Credentials from './components/Credentials';
 
 function App() {
 
@@ -11,7 +13,7 @@ function App() {
 
   return (
     <div className="App">
-      {!user ? <Login /> : ''}
+      {!user ? <Credentials /> : ''}
     </div>
   );
 }
