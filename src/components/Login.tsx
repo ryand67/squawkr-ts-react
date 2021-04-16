@@ -21,7 +21,7 @@ function Login() {
                 <UsernameInput required placeholder="email..." onChange={e => setUsername(e.target.value)} />
                 <PasswordLabel>Password:</PasswordLabel>
                 <PasswordInput required type="password" placeholder="password..." onChange={e => setPassword(e.target.value)} />
-                <LoginButton onClick={e => handleSubmit(e)}>LOGIN</LoginButton>
+                <LoginButton type="submit" onClick={e => handleSubmit(e)}>LOGIN</LoginButton>
             </LoginForm>
         </LoginContainer>
     )
