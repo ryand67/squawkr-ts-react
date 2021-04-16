@@ -1,15 +1,14 @@
-import { useEffect } from 'react';
 import { auth } from '../util/firebase';
 
 function Home() {
 
-    useEffect(() => {
+    const so = () => {
         auth.signOut();
-    }, [])
+    }
 
     return (
         <div>
-            
+            <button onClick={so}>signout</button>
         </div>
     )
 }

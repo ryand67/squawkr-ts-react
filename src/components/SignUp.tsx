@@ -7,6 +7,7 @@ import { auth, db } from '../util/firebase';
 function SignUp() {
 
     const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [passwordRepeat, setPasswordRepeat] = useState('');
     const [bio, setBio] = useState('');
@@ -19,12 +20,18 @@ function SignUp() {
         setBioChar(e.target.value.length);
     }
 
+    const clearError = () => {
+        setError(false);
+        setErrorMessage('');
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if(validator.validate(email) && password === passwordRepeat) {
             auth.createUserWithEmailAndPassword(email, password).then(user => {
                 db.collection('users').add({
                     email: email,
+                    username: username,
                     bio: bio
                 })
             }).catch(err => {
@@ -39,9 +46,11 @@ function SignUp() {
     return (
         <SignUpForm onSubmit={e => handleSubmit(e)}>
             <SignUpHeader>Sign Up</SignUpHeader>
-            {error ? <ErrorMessage>{errMessage}</ErrorMessage> : ''}
-            <UsernameLabel>Email:</UsernameLabel>
-            <UsernameInput placeholder="email..." required onChange={e => setEmail(e.target.value)} />
+            {error ? <ErrorMessage onClick={clearError}>{errMessage}</ErrorMessage> : ''}
+            <EmailLabel>Email:</EmailLabel>
+            <EmailInput placeholder="email..." required onChange={e => setEmail(e.target.value)} />
+            <UsernameLabel>Username</UsernameLabel>
+            <UsernameInput placeholder="username..." required onChange={e => setUsername(e.target.value)} />
             <PasswordLabel>Password (at least 6 characters)</PasswordLabel>
             <PasswordInput placeholder="password..." required type="password" onChange={e => setPassword(e.target.value)} />
             <PasswordLabelRepeat>Password Confirm (at least 6 characters)</PasswordLabelRepeat>
@@ -69,6 +78,10 @@ const SignUpHeader = styled.h1``;
 const ErrorMessage = styled.h3`
     color: red;
 `;
+
+const EmailLabel = styled.label``;
+
+const EmailInput = styled.input``;
 
 const UsernameLabel = styled.label``;
 

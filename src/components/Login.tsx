@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { auth, provider } from '../util/firebase';
+import { auth } from '../util/firebase';
 
 function Login() {
 
