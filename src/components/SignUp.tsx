@@ -11,6 +11,8 @@ function SignUp() {
     const [passwordRepeat, setPasswordRepeat] = useState('');
     const [bio, setBio] = useState('');
     const [bioChar, setBioChar] = useState(0);
+    const [error, setError] = useState(false);
+    const [errMessage, setErrorMessage] = useState('');
 
     const handleBioChange = (e) => {
         setBio(e.target.value);
@@ -21,7 +23,13 @@ function SignUp() {
         e.preventDefault();
         if(validator.validate(email) && password === passwordRepeat) {
             auth.createUserWithEmailAndPassword(email, password).then(user => {
-                console.log(user);
+                db.collection('users').add({
+                    email: email,
+                    bio: bio
+                })
+            }).catch(err => {
+                setError(!error);
+                setErrorMessage(err.message);
             })
         } else {
             throw Error;
@@ -31,6 +39,7 @@ function SignUp() {
     return (
         <SignUpForm onSubmit={e => handleSubmit(e)}>
             <SignUpHeader>Sign Up</SignUpHeader>
+            {error ? <ErrorMessage>{errMessage}</ErrorMessage> : ''}
             <UsernameLabel>Email:</UsernameLabel>
             <UsernameInput placeholder="email..." required onChange={e => setEmail(e.target.value)} />
             <PasswordLabel>Password (at least 6 characters)</PasswordLabel>
@@ -56,6 +65,10 @@ const SignUpForm = styled.form`
 `;
 
 const SignUpHeader = styled.h1``;
+
+const ErrorMessage = styled.h3`
+    color: red;
+`;
 
 const UsernameLabel = styled.label``;
 
