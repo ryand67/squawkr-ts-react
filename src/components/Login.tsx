@@ -4,12 +4,16 @@ import { auth, provider } from '../util/firebase';
 
 function Login() {
 
-    const [username, setUsername] = useState('')
+    const [email, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(username, password);
+        auth.signInWithEmailAndPassword(email, password).then(() => {
+
+        }).catch(err => {
+            throw err;
+        })
     }
 
     return (
