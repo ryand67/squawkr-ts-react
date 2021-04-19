@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { auth } from '../util/firebase';
 
@@ -5,14 +6,18 @@ import PostForm from './PostForm';
 
 function Home() {
 
-    const so = (): void => {
+    useEffect(() => {
+        
+    }, [])
+
+    const signOut = (): void => {
         auth.signOut();
     }
 
     return (
         <HomeContainer>
+            <button onClick={signOut}>signout</button>
             <PostForm />
-            <button onClick={so}>signout</button>
         </HomeContainer>
     )
 }

@@ -12,24 +12,22 @@ function PostForm() {
     const [post, setPost] = useState<string>('');
     const [charCount, setCharCount] = useState<number>(0);
     
-    const getHashtags = async (post: string): Promise<any> => {
-        let hashtags: string[] = [];
-
-        post.split(" ").map((word): void => {
-            if (word.charAt(0) === "#") {
-              hashtags.push(word);
-            }
-        });
-
-        return new Promise(resolve => {
-            resolve(hashtags);
-        });
-    };
-
     const handleChange = (postContent: string) => {
         setPost(postContent);
         setCharCount(postContent.length);
     }
+
+    const getHashtags = async (post: string): Promise<any> => {
+        const hashtags = post.split(" ").forEach((word) => {
+            if (word.charAt(0) === "#") {
+              return word;
+            }
+        });
+        
+        return new Promise(resolve => {
+            resolve(hashtags);
+        });
+    };
 
     const handleSubmit = (e): void => {
         e.preventDefault();
