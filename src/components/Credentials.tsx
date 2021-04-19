@@ -6,7 +6,7 @@ import Signup from './SignUp';
 
 function Credentials() {
 
-    const [logToggle, setLogToggle] = useState(true);
+    const [logToggle, setLogToggle] = useState<boolean>(true);
 
     const handleToggleChange = () => {
         setLogToggle(!logToggle);

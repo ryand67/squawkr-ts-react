@@ -4,8 +4,8 @@ import { auth } from '../util/firebase';
 
 function Login() {
 
-    const [email, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setUsername] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
 
     const handleSubmit = (e) => {
         e.preventDefault();

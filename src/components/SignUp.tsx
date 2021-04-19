@@ -6,14 +6,14 @@ import { auth, db } from '../util/firebase';
 
 function SignUp() {
 
-    const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordRepeat, setPasswordRepeat] = useState('');
-    const [bio, setBio] = useState('');
-    const [bioChar, setBioChar] = useState(0);
-    const [error, setError] = useState(false);
-    const [errMessage, setErrorMessage] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [username, setUsername] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [passwordRepeat, setPasswordRepeat] = useState<string>('');
+    const [bio, setBio] = useState<string>('');
+    const [bioChar, setBioChar] = useState<number>(0);
+    const [error, setError] = useState<boolean>(false);
+    const [errMessage, setErrorMessage] = useState<string>('');
 
     const handleBioChange = (e) => {
         setBio(e.target.value);

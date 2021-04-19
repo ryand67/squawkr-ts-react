@@ -2,7 +2,7 @@ import { auth } from '../util/firebase';
 
 function Home() {
 
-    const so = () => {
+    const so = (): void => {
         auth.signOut();
     }
 
