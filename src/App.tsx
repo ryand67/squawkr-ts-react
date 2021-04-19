@@ -4,7 +4,7 @@ import { auth } from './util/firebase';
 
 // Components
 import Credentials from './components/Credentials';
-import Home from './components/Home';
+import HomeContainer from './components/Home';
 
 function App() {
 
@@ -12,7 +12,7 @@ function App() {
 
   return (
     <div className="App">
-      {!user ? <Credentials /> : <Home />}
+      {!user ? <Credentials /> : <HomeContainer />}
     </div>
   );
 }

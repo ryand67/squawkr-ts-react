@@ -30,7 +30,7 @@ const CredPage = styled.div`
 `;
 
 const Toggle = styled.p`
-
+    cursor: pointer;
 `;
 
 export default Credentials
