@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { db, auth } from '../util/firebase';
 
@@ -8,6 +8,15 @@ import styled from 'styled-components';
 function PostForm() {
 
     const [user] = useAuthState(auth);
+    const [username, setUsername] = useState<string>('')
+
+    useEffect(() => {
+        db.collection('users').where('email', '==', user?.email).get().then((res) => {
+            res.forEach(item => {
+                setUsername(item.data().username);
+            })
+        });
+    },)
 
     const [post, setPost] = useState<string>('');
     const [charCount, setCharCount] = useState<number>(0);
@@ -17,40 +26,28 @@ function PostForm() {
         setCharCount(postContent.length);
     }
 
-    const getHashtags = async (post: string): Promise<any> => {
-        const hashtags = post.split(" ").forEach((word) => {
-            if (word.charAt(0) === "#") {
-              return word;
-            }
-        });
-        
-        return new Promise(resolve => {
-            resolve(hashtags);
-        });
-    };
-
     const handleSubmit = (e): void => {
         e.preventDefault();
 
+        if(!post) return;
+
         const postedDate = new Date();
 
-        getHashtags(post).then((res) => {
-            db.collection('posts').add({
-                author: user ? user.email : undefined,
-                content: post,
-                hashtags: res,
-                postedDate
-            }).then(() => {
-                setPost('');
-                setCharCount(0);
-            })
-        });
+        db.collection('posts').add({
+            authorUsername: username,
+            authorEmail: user?.email,
+            content: post,
+            postedDate
+        }).then(() => {
+            setPost('');
+            setCharCount(0);
+        })
 
     }
 
     return (
         <PostFormDiv>
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={e => handleSubmit(e)}>
                 <PostText value={post} maxLength={250} onChange={e => handleChange(e.target.value)} />
                 <CharCount style={{ color: `${charCount === 250 ? 'red' : 'black'}`}}>{charCount}/250</CharCount>
                 <SubmitButton type="submit" onClick={ e => handleSubmit(e)}>Submit</SubmitButton>
