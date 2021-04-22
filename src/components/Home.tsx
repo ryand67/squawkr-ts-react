@@ -4,22 +4,32 @@ import { auth, db } from '../util/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 import PostForm from './PostForm';
-import Post from './Post';
+import PostCard from './Post';
 
 function Home() {
 
+    type fbDate = {
+        seconds: number;
+        nanoseconds: number;
+    }
+
+    interface Post {
+        content: string;
+        authorEmail: string;
+        authorUsername: string;
+        postedDate: fbDate;
+    }
+
     const [user] = useAuthState(auth);
 
-    const [posts, setPosts] = useState<Object []>([])
+    const [posts, setPosts] = useState<Post []>([])
 
     useEffect(() => {
         grabPosts();
     }, [])
 
-    //Make async so that it passes the posts back and then i can do a .then in the useEffect/etc
-
     const grabPosts = () => {
-        let postsHolder: Object[] = [];
+        let postsHolder: any[] = [];
         db.collection('posts').get().then(res => {
             res.forEach(item => {
                 postsHolder.push(item.data());
@@ -33,12 +43,23 @@ function Home() {
         auth.signOut();
     }
 
+    // db.collection('posts').onSnapshot(() => {
+    //     grabPosts();
+    // }, (error) => {
+    //     throw error;
+    // })
+
+    console.log(posts);
+
+
     return (
         <HomeContainer>
             <button onClick={signOut}>signout</button>
             <PostForm />
             <PostContainer>
-                <Post content="asdf" author="qwer" id="1414" date="asdf" />
+                {posts.map(post => {
+                    return <PostCard content={post?.content} author={post?.authorUsername} date={post.postedDate} />
+                })}
             </PostContainer>
         </HomeContainer>
     )
