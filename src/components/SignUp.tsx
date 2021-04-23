@@ -1,82 +1,134 @@
-import { useState } from 'react';
-import * as validator from 'email-validator';
-import styled from 'styled-components';
+import { useState } from "react";
+import * as validator from "email-validator";
+import styled from "styled-components";
 
-import { auth, db } from '../util/firebase';
+import { auth, db } from "../util/firebase";
 
 function SignUp() {
+  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [passwordRepeat, setPasswordRepeat] = useState<string>("");
+  const [bio, setBio] = useState<string>("");
+  const [bioChar, setBioChar] = useState<number>(0);
+  const [error, setError] = useState<boolean>(false);
+  const [errMessage, setErrorMessage] = useState<string>("");
 
-    const [email, setEmail] = useState<string>('');
-    const [username, setUsername] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [passwordRepeat, setPasswordRepeat] = useState<string>('');
-    const [bio, setBio] = useState<string>('');
-    const [bioChar, setBioChar] = useState<number>(0);
-    const [error, setError] = useState<boolean>(false);
-    const [errMessage, setErrorMessage] = useState<string>('');
+  const handleBioChange = (e): void => {
+    setBio(e.target.value);
+    setBioChar(e.target.value.length);
+  };
 
-    const handleBioChange = (e) => {
-        setBio(e.target.value);
-        setBioChar(e.target.value.length);
-    }
+  const clearError = (): void => {
+    setError(false);
+    setErrorMessage("");
+  };
 
-    const clearError = () => {
-        setError(false);
-        setErrorMessage('');
-    }
+  // 
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if(validator.validate(email) && password === passwordRepeat) {
-            auth.createUserWithEmailAndPassword(email, password).then(user => {
-                db.collection('users').add({
-                    email: email,
-                    username: username,
-                    bio: bio
-                })
-            }).catch(err => {
-                setError(!error);
-                setErrorMessage(err.message);
+  const checkUsernameExists = async (): Promise<boolean> => {
+    return new Promise(resolve => {
+        let flag: boolean;
+        db.collection('users').where('username', '==', username).get()
+            .then(res => {
+                if(res.docs.length > 0) {
+                    resolve(true);
+                    setError(!error);
+                    setErrorMessage('Username already in use.');
+                } else {
+                    resolve(false);
+                }
             })
-        } else {
-            throw Error;
-        }
-    }
+    })
+  }
 
-    return (
-        <SignUpForm onSubmit={e => handleSubmit(e)}>
-            <SignUpHeader>Sign Up</SignUpHeader>
-            {error ? <ErrorMessage onClick={clearError}>{errMessage}</ErrorMessage> : ''}
-            <EmailLabel>Email:</EmailLabel>
-            <EmailInput placeholder="email..." required onChange={e => setEmail(e.target.value)} />
-            <UsernameLabel>Username</UsernameLabel>
-            <UsernameInput placeholder="username..." required onChange={e => setUsername(e.target.value)} />
-            <PasswordLabel>Password (at least 6 characters)</PasswordLabel>
-            <PasswordInput placeholder="password..." required type="password" onChange={e => setPassword(e.target.value)} />
-            <PasswordLabelRepeat>Password Confirm (at least 6 characters)</PasswordLabelRepeat>
-            <PasswordInputRepeat placeholder="password..." required type="password" onChange={e => setPasswordRepeat(e.target.value)} />
-            <BioLabel>Bio:</BioLabel>
-            <BioInput rows={8} maxLength={350} placeholder="About you..." onChange={e => handleBioChange(e)} />
-            <BioCount>{bioChar}/350</BioCount>
-            <SignUpButton type="submit" onSubmit={e => handleSubmit(e)}>Sign Up</SignUpButton>
-        </SignUpForm>
-    )
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let usernameCheck = await checkUsernameExists();
+    if (validator.validate(email) && password === passwordRepeat && !usernameCheck) {
+      auth
+        .createUserWithEmailAndPassword(email, password)
+        .then((user) => {
+          db.collection("users").add({
+            email: email,
+            username: username,
+            bio: bio,
+          });
+        })
+        .catch((err) => {
+          setError(!error);
+          setErrorMessage(err.message);
+        });
+    } else {
+      throw Error;
+    }
+  };
+
+  return (
+    <SignUpForm onSubmit={(e) => handleSubmit(e)}>
+      <SignUpHeader>Sign Up</SignUpHeader>
+      {error ? (
+        <ErrorMessage onClick={clearError}>{errMessage}</ErrorMessage>
+      ) : (
+        ""
+      )}
+      <EmailLabel>Email:</EmailLabel>
+      <EmailInput
+        placeholder="email..."
+        required
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <UsernameLabel>Username</UsernameLabel>
+      <UsernameInput
+        placeholder="username..."
+        required
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <PasswordLabel>Password (at least 6 characters)</PasswordLabel>
+      <PasswordInput
+        placeholder="password..."
+        required
+        type="password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <PasswordLabelRepeat>
+        Password Confirm (at least 6 characters)
+      </PasswordLabelRepeat>
+      <PasswordInputRepeat
+        placeholder="password..."
+        required
+        type="password"
+        onChange={(e) => setPasswordRepeat(e.target.value)}
+      />
+      <BioLabel>Bio:</BioLabel>
+      <BioInput
+        rows={8}
+        maxLength={350}
+        placeholder="About you..."
+        onChange={(e) => handleBioChange(e)}
+      />
+      <BioCount>{bioChar}/350</BioCount>
+      <SignUpButton type="submit" onSubmit={(e) => handleSubmit(e)}>
+        Sign Up
+      </SignUpButton>
+    </SignUpForm>
+  );
 }
 
 const SignUpForm = styled.form`
-    width: 25%;
-    display: flex;
-    flex-direction: column;
+  width: 25%;
+  display: flex;
+  flex-direction: column;
 
-    * {
-        margin: .25em 0;
-    }
+  * {
+    margin: 0.25em 0;
+  }
 `;
 
 const SignUpHeader = styled.h1``;
 
 const ErrorMessage = styled.h3`
-    color: red;
+  color: red;
 `;
 
 const EmailLabel = styled.label``;
@@ -100,11 +152,11 @@ const SignUpButton = styled.button``;
 const BioLabel = styled.label``;
 
 const BioInput = styled.textarea`
-    resize: none;
+  resize: none;
 `;
 
 const BioCount = styled.p`
-    text-align: right;
+  text-align: right;
 `;
 
-export default SignUp
+export default SignUp;
