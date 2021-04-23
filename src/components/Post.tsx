@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { convertTimestamp } from 'convert-firebase-timestamp';
 
 export type fbDate = {
     seconds: number;
@@ -7,20 +8,20 @@ export type fbDate = {
 
 interface Props {
     content: string;
-    id?: string;
-    date: fbDate;
+    id: string;
+    date: fbDate | Date;
     author: string;
 }
 
 function Post({ content, id, date, author }: Props) {
-
-    console.log(date);
+    
+    let newDate = convertTimestamp(date).toString().substr(0, 24);
 
     return (
         <PostCard>
             <Author>@{author}</Author>
             <Content>{content}</Content>
-            <Date>{date.seconds}</Date>
+            <Date>{newDate}</Date>
         </PostCard>
     )
 }

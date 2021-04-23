@@ -18,6 +18,7 @@ function Home() {
         authorEmail: string;
         authorUsername: string;
         postedDate: fbDate;
+        id: string;
     }
 
     const [user] = useAuthState(auth);
@@ -29,10 +30,17 @@ function Home() {
     }, [])
 
     const grabPosts = () => {
-        let postsHolder: any[] = [];
+        let postsHolder: Post[] = [];
         db.collection('posts').get().then(res => {
             res.forEach(item => {
-                postsHolder.push(item.data());
+                const holder: Post = { content: item.data().content,
+                    authorEmail: item.data().authorEmail,
+                    authorUsername: item.data().authorUsername,
+                    postedDate: item.data().postedDate,
+                    id: item.id
+                };
+
+                postsHolder.push(holder);
             })
         }).then(() => {
             setPosts(postsHolder);
@@ -43,22 +51,13 @@ function Home() {
         auth.signOut();
     }
 
-    // db.collection('posts').onSnapshot(() => {
-    //     grabPosts();
-    // }, (error) => {
-    //     throw error;
-    // })
-
-    console.log(posts);
-
-
     return (
         <HomeContainer>
             <button onClick={signOut}>signout</button>
             <PostForm />
             <PostContainer>
                 {posts.map(post => {
-                    return <PostCard content={post?.content} author={post?.authorUsername} date={post.postedDate} />
+                    return <PostCard content={post.content} author={post.authorUsername} date={post.postedDate} id={post.id} key={post.id} />
                 })}
             </PostContainer>
         </HomeContainer>
