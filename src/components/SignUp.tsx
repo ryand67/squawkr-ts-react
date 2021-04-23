@@ -28,7 +28,6 @@ function SignUp() {
 
   const checkUsernameExists = async (): Promise<boolean> => {
     return new Promise(resolve => {
-        let flag: boolean;
         db.collection('users').where('username', '==', username).get()
             .then(res => {
                 if(res.docs.length > 0) {
@@ -42,7 +41,7 @@ function SignUp() {
     })
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e): Promise<void> => {
     e.preventDefault();
     let usernameCheck = await checkUsernameExists();
     if (validator.validate(email) && password === passwordRepeat && !usernameCheck) {
