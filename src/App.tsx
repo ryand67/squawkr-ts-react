@@ -27,7 +27,7 @@ function App() {
             {!user ? <Credentials /> : <HomeContainer />}
           </Route>
 
-          <Route exact path="/profile">
+          <Route exact path="/:username">
             <ProfileMe />
           </Route>
 

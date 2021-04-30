@@ -7,20 +7,11 @@ import { Link } from 'react-router-dom';
 import PostForm from './PostForm';
 import PostCard from './Post';
 
+import { Post } from '../util/Interfaces';
+
 function Home() {
+    
 
-    type fbDate = {
-        seconds: number;
-        nanoseconds: number;
-    }
-
-    interface Post {
-        content: string;
-        authorEmail: string;
-        authorUsername: string;
-        postedDate: fbDate;
-        id: string;
-    }
 
     const [user] = useAuthState(auth);
 
@@ -32,7 +23,7 @@ function Home() {
 
     const grabPosts = () => {
         let postsHolder: Post[] = [];
-        db.collection('posts').get().then(res => {
+        db.collection('posts').orderBy('postedDate', 'desc').get().then(res => {
             res.forEach(item => {
                 const holder: Post = { content: item.data().content,
                     authorEmail: item.data().authorEmail,
@@ -55,7 +46,7 @@ function Home() {
     return (
         <HomeContainer>
             <button onClick={signOut}>signout</button>
-            <Link to={`/profile`}><ProfileButton>Profile</ProfileButton></Link>
+            <Link to={`/:username=${user?.email}`}><ProfileButton>Profile</ProfileButton></Link>
             <PostForm />
             <PostContainer>
                 {posts.map(post => {

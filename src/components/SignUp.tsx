@@ -79,7 +79,7 @@ function SignUp() {
       />
       <UsernameLabel>Username</UsernameLabel>
       <UsernameInput
-        placeholder="username..."
+        placeholder="@username..."
         required
         onChange={(e) => setUsername(e.target.value)}
       />

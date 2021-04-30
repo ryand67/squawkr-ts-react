@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { convertTimestamp } from 'convert-firebase-timestamp';
+import { Link } from 'react-router-dom';
 
 export type fbDate = {
     seconds: number;
@@ -20,7 +21,7 @@ function Post({ content, id, date, author, email }: Props) {
 
     return (
         <PostCard>
-            <Author>@{author}</Author>
+            <Link to={`:username=${email}`}><Author>@{author}</Author></Link>
             <Content>{content}</Content>
             <Date>{newDate}</Date>
         </PostCard>
