@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { auth, db } from '../util/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { Link } from 'react-router-dom';
 
 import PostForm from './PostForm';
 import PostCard from './Post';
@@ -54,7 +55,7 @@ function Home() {
     return (
         <HomeContainer>
             <button onClick={signOut}>signout</button>
-            <ProfileButton onClick={(): void => window.location.replace('/profile')}>Profile</ProfileButton>
+            <Link to={`/profile`}><ProfileButton>Profile</ProfileButton></Link>
             <PostForm />
             <PostContainer>
                 {posts.map(post => {

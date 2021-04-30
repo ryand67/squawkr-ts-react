@@ -8,6 +8,7 @@ import styled from 'styled-components';
 // Components
 import Credentials from './components/Credentials';
 import HomeContainer from './components/Home';
+import ProfileMe from './components/ProfileMe';
 
 function App() {
 
@@ -16,12 +17,18 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <LogoHeader onClick={() => window.location.replace('/')}>
-          <h1 style={{ cursor: 'pointer' }}>SQUAWKR</h1>
-        </LogoHeader>
+        <Link to={`/`}>
+          <LogoHeader>
+            <h1 style={{ cursor: 'pointer' }}>SQUAWKR</h1>
+          </LogoHeader>
+        </Link>
         <Switch>
           <Route exact path="/">
             {!user ? <Credentials /> : <HomeContainer />}
+          </Route>
+
+          <Route exact path="/profile">
+            <ProfileMe />
           </Route>
 
         </Switch>
@@ -32,6 +39,8 @@ function App() {
 
 const LogoHeader = styled.div`
   background-color: whitesmoke;
+  position: absolute;
+  width: 30rem;
 `;
 
 export default App;
