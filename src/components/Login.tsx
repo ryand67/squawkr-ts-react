@@ -6,19 +6,29 @@ function Login() {
 
     const [email, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
+    const [errorFlag, setErrorFlag] = useState<Boolean>(false);
+    const [errorMsg, setErrorMsg] = useState<String>('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         auth.signInWithEmailAndPassword(email, password).then(() => {
 
         }).catch(err => {
+            setErrorFlag(true);
+            setErrorMsg(`${err.message} (Click to close)`);
             throw err;
         })
+    }
+
+    const handleErrorClose = () => {
+        setErrorFlag(false);
+        setErrorMsg('');
     }
 
     return (
         <LoginContainer>
             <LoginForm onSubmit={e => handleSubmit(e)}>
+                <ErrorMessage onClick={() => handleErrorClose()}>{errorFlag ? errorMsg : ''}</ErrorMessage>
                 <LoginHeader>LOGIN</LoginHeader>
                 <UsernameLabel>Email:</UsernameLabel>
                 <UsernameInput required placeholder="email..." onChange={e => setUsername(e.target.value)} />
@@ -45,6 +55,10 @@ const LoginForm = styled.form`
     * {
         margin: .25em 0;
     }
+`;
+
+const ErrorMessage = styled.h1`
+    color: red;
 `;
 
 const LoginHeader = styled.h1`
