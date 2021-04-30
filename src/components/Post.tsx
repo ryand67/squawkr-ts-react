@@ -11,9 +11,10 @@ interface Props {
     id: string;
     date: fbDate | Date;
     author: string;
+    email: string;
 }
 
-function Post({ content, id, date, author }: Props) {
+function Post({ content, id, date, author, email }: Props) {
     
     let newDate = convertTimestamp(date).toString().substr(0, 24);
 

@@ -54,10 +54,11 @@ function Home() {
     return (
         <HomeContainer>
             <button onClick={signOut}>signout</button>
+            <ProfileButton onClick={(): void => window.location.replace('/profile')}>Profile</ProfileButton>
             <PostForm />
             <PostContainer>
                 {posts.map(post => {
-                    return <PostCard content={post.content} author={post.authorUsername} date={post.postedDate} id={post.id} key={post.id} />
+                    return <PostCard email={post.authorEmail} content={post.content} author={post.authorUsername} date={post.postedDate} id={post.id} key={post.id} />
                 })}
             </PostContainer>
         </HomeContainer>
@@ -70,6 +71,13 @@ const HomeContainer = styled.div`
     align-items: center;
     width: 50%;
     margin: 0 auto;
+`;
+
+const ProfileButton = styled.button`
+    position: absolute;
+    right: 0;
+    margin-top: 1em;
+    margin-right: 1em;
 `;
 
 const PostContainer = styled.div`

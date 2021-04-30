@@ -9,7 +9,7 @@ function Login() {
     const [errorFlag, setErrorFlag] = useState<Boolean>(false);
     const [errorMsg, setErrorMsg] = useState<String>('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e): void => {
         e.preventDefault();
         auth.signInWithEmailAndPassword(email, password).then(() => {
 
@@ -20,7 +20,7 @@ function Login() {
         })
     }
 
-    const handleErrorClose = () => {
+    const handleErrorClose = (): void => {
         setErrorFlag(false);
         setErrorMsg('');
     }
