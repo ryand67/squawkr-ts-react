@@ -12,19 +12,33 @@ import PostCard from './Post';
 
 function ProfileMe() {
 
+    const [user] = useAuthState(auth);
+
     let { username } = useParams();
     const [profileEmail, setProfileEmail] = useState<String>(username.substr(10));
     const [userInfo, setUserInfo] = useState<UserInfoType>({email: '', username: '', bio: ''});
     const [posts, setPosts] = useState<Post []>([]);
 
     const getUserInfo = (): void => {
+        let userExists: Boolean = false;
         db.collection('users').where('email', '==', profileEmail).get().then((res) => {
-            let holder: UserInfoType = {
-                email: res.docs[0].data().email,
-                username: res.docs[0].data().username,
-                bio: res.docs[0].data().bio
+            if(res.docs.length === 0) {
+                let holder: UserInfoType = {
+                    email: '',
+                    username: 'User Does Not Exist',
+                    bio: ''
+                }
+                setUserInfo(holder);
+                userExists = false;
+            } else {
+                let holder: UserInfoType = {
+                    email: res.docs[0].data().email,
+                    username: res.docs[0].data().username,
+                    bio: res.docs[0].data().bio
+                }
+                setUserInfo(holder);
+                userExists = true;
             }
-            setUserInfo(holder);
         })
     }
 
@@ -48,18 +62,21 @@ function ProfileMe() {
 
     useEffect((): void => {
         getUserInfo();
-        getUserPosts();
+        if(userInfo.username === "User Does Not Exist") {
+            return;
+        } else {
+            getUserPosts();
+        }
     }, [])
 
     return (
         <ProfileContainer>
             <InfoContainer>
-                <UsernameHeader>@{userInfo.username}</UsernameHeader>
+                <UsernameHeader>{userInfo.username === "User Does Not Exist" ? '': '@'}{userInfo.username}</UsernameHeader>
                 <BioHolder>{userInfo.bio}</BioHolder>
             </InfoContainer>
             <PostContainer>
                 {posts.map(post => {
-                    console.log(post);
                     return <PostCard email={post.authorEmail} content={post.content} author={post.authorUsername} date={post.postedDate} id={post.id} key={post.id} />
                 })}
             </PostContainer>

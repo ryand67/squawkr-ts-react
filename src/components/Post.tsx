@@ -21,6 +21,7 @@ function Post({ content, id, date, author, email }: Props) {
 
     return (
         <PostCard>
+            <DeleteButton></DeleteButton>
             <Link to={`:username=${email}`}><Author>@{author}</Author></Link>
             <Content>{content}</Content>
             <Date>{newDate}</Date>
@@ -49,5 +50,9 @@ const Author = styled.h1`
 const Content = styled.p``;
 
 const Date = styled.p``;
+
+const DeleteButton = styled.p`
+
+`;
 
 export default Post
