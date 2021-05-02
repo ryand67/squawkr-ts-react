@@ -76,6 +76,7 @@ function Profile() {
                 <UsernameHeader>{userInfo.username === "User Does Not Exist" ? '': '@'}{userInfo.username}</UsernameHeader>
                 <BioHolder>{userInfo.bio}</BioHolder>
             </InfoContainer>
+            {profileEmail === user?.email ? <PostForm /> : ''}
             <PostContainer>
                 {posts.map(post => {
                     return <PostCard email={post.authorEmail} content={post.content} author={post.authorUsername} date={post.postedDate} id={post.id} key={post.id} />

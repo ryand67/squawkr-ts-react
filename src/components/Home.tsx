@@ -10,8 +10,6 @@ import PostCard from './Post';
 import { Post } from '../util/Interfaces';
 
 function Home() {
-    
-
 
     const [user] = useAuthState(auth);
 
@@ -46,7 +44,7 @@ function Home() {
     return (
         <HomeContainer>
             <button onClick={signOut}>signout</button>
-            <Link to={`/:username=${user?.email}`}><ProfileButton>Profile</ProfileButton></Link>
+            <Link to={`/:username=${user?.email}`}><ProfileButton>Profile: {user?.email}</ProfileButton></Link>
             <PostForm />
             <PostContainer>
                 {posts.map(post => {

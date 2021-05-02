@@ -40,7 +40,7 @@ function App() {
 const LogoHeader = styled.div`
   background-color: whitesmoke;
   position: absolute;
-  width: 30rem;
+  width: 20rem;
 `;
 
 export default App;
