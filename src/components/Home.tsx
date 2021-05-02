@@ -44,7 +44,7 @@ function Home() {
     return (
         <HomeContainer>
             <button onClick={signOut}>signout</button>
-            <Link to={`/:username=${user?.email}`}><ProfileButton>Profile: {user?.email}</ProfileButton></Link>
+            <Link to={`/user/:username=${user?.email}`}><ProfileButton>Profile: {user?.email}</ProfileButton></Link>
             <PostForm />
             <PostContainer>
                 {posts.map(post => {

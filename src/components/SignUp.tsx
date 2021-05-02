@@ -7,6 +7,7 @@ import { auth, db } from "../util/firebase";
 function SignUp() {
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+  const [name, setName] = useState<string>('')
   const [password, setPassword] = useState<string>("");
   const [passwordRepeat, setPasswordRepeat] = useState<string>("");
   const [bio, setBio] = useState<string>("");
@@ -83,6 +84,12 @@ function SignUp() {
         required
         onChange={(e) => setUsername(e.target.value)}
       />
+      <NameLabel>Name:</NameLabel>
+      <NameInput
+        placeholder="name..."
+        required
+        onChange={((e) => setName(e.target.value))}
+      />
       <PasswordLabel>Password (at least 6 characters)</PasswordLabel>
       <PasswordInput
         placeholder="password..."
@@ -137,6 +144,10 @@ const EmailInput = styled.input``;
 const UsernameLabel = styled.label``;
 
 const UsernameInput = styled.input``;
+
+const NameLabel = styled.label``;
+
+const NameInput = styled.input``;
 
 const PasswordLabel = styled.label``;
 
