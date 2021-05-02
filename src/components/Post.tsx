@@ -36,7 +36,7 @@ function Post({ content, id, date, author, email }: Props) {
     return (
         <PostCard>
             {isPostOwner ? <DeleteButton onClick={() => handleDelete(id)}>X</DeleteButton> : ''}
-            <Link to={`:username=${email}`}><Author>@{author}</Author></Link>
+            <Link to={`/user/:username=${email}`}><Author>@{author}</Author></Link>
             <Content>{content}</Content>
             <Date>{newDate}</Date>
         </PostCard>

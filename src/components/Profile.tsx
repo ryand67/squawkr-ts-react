@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, db } from '../util/firebase';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -75,6 +75,7 @@ function Profile() {
             <InfoContainer>
                 <UsernameHeader>{userInfo.username === "User Does Not Exist" ? '': '@'}{userInfo.username}</UsernameHeader>
                 <BioHolder>{userInfo.bio}</BioHolder>
+                <Link to="/edit-profile"><EditProfileButton>Edit Profile</EditProfileButton></Link>
             </InfoContainer>
             {profileEmail === user?.email ? <PostForm /> : ''}
             <PostContainer>
@@ -113,6 +114,10 @@ const UsernameHeader = styled.h1`
 const BioHolder = styled.p`
     padding: 0 1em;
     font-size: 1em;
+`;
+
+const EditProfileButton = styled.button`
+    width: 25%;
 `;
 
 const PostContainer = styled.div`
