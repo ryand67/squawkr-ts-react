@@ -9,8 +9,9 @@ import styled from 'styled-components';
 import { UserInfoType, Post } from '../util/Interfaces';
 
 import PostCard from './Post';
+import PostForm from './PostForm';
 
-function ProfileMe() {
+function Profile() {
 
     const [user] = useAuthState(auth);
 
@@ -118,4 +119,4 @@ const PostContainer = styled.div`
     height: auto;
 `;
 
-export default ProfileMe
+export default Profile

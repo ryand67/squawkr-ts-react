@@ -8,7 +8,7 @@ import styled from 'styled-components';
 // Components
 import Credentials from './components/Credentials';
 import HomeContainer from './components/Home';
-import ProfileMe from './components/ProfileMe';
+import Profile from './components/Profile';
 
 function App() {
 
@@ -28,7 +28,7 @@ function App() {
           </Route>
 
           <Route exact path="/:username">
-            <ProfileMe />
+            <Profile />
           </Route>
 
         </Switch>
