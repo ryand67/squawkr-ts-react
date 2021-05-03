@@ -47,7 +47,7 @@ function Profile() {
 
     const getUserPosts = (): void => {
         let postsHolder: Post[] = [];
-        db.collection('posts').where('authorEmail', '==', profileEmail).get().then(res => {
+        db.collection('posts').orderBy('postedDate', 'desc').where('authorEmail', '==', profileEmail).get().then(res => {
             res.forEach(item => {
                 const holder: Post = { content: item.data().content,
                     authorEmail: item.data().authorEmail,
@@ -76,6 +76,7 @@ function Profile() {
         <ProfileContainer>
             <InfoContainer>
                 <UsernameHeader>{userInfo.username === "User Does Not Exist" ? '': '@'}{userInfo.username}</UsernameHeader>
+                <NameHeader>{userInfo.username === 'User Does Not Exist' ? '' : userInfo.name}</NameHeader>
                 <BioHolder>{userInfo.bio}</BioHolder>
                 <Link to="/edit-profile"><EditProfileButton>Edit Profile</EditProfileButton></Link>
             </InfoContainer>
@@ -111,6 +112,10 @@ const InfoContainer = styled.div`
 
 const UsernameHeader = styled.h1`
     padding: 0 1em;
+`;
+
+const NameHeader = styled.h3`
+    padding: 0 .5em;
 `;
 
 const BioHolder = styled.p`

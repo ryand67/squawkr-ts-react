@@ -9,6 +9,7 @@ function EditProfile() {
     const [user] = useAuthState(auth);
     const [name, setName] = useState<string>('');
     const [bio, setBio] = useState<string>('');
+    const [userDocId, setUserDocId]= useState<string>('');
 
     const getUserInfo = async (): Promise<void> => {
         console.log(user);
@@ -16,6 +17,16 @@ function EditProfile() {
             const holder = res.docs[0].data();
             setName(holder.name);
             setBio(holder.bio);
+            setUserDocId(res.docs[0].id);
+        })
+    }
+
+    const updateProfile = (): void => {
+        db.collection('users').doc(userDocId).update({
+            name,
+            bio
+        }).then(() => {
+            window.location.replace('/');
         })
     }
 
@@ -30,7 +41,7 @@ function EditProfile() {
             <label htmlFor="bio">Bio:</label>
             <textarea value={bio} onChange={e => setBio(e.target.value)} name="bio" id="" cols={30} rows={10}></textarea>
             <ButtonDiv>
-                <button>Submit</button>
+                <button onClick={updateProfile}>Save Changes</button>
                 <button>Cancel</button>
             </ButtonDiv>
         </EditForm>
