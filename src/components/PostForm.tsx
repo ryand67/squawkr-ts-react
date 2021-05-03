@@ -16,7 +16,7 @@ function PostForm() {
                 setUsername(item.data().username);
             })
         });
-    },)
+    }, [])
 
     const [post, setPost] = useState<string>('');
     const [charCount, setCharCount] = useState<number>(0);

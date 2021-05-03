@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, db } from '../util/firebase';
+import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -42,7 +43,7 @@ function EditProfile() {
             <textarea value={bio} onChange={e => setBio(e.target.value)} name="bio" id="" cols={30} rows={10}></textarea>
             <ButtonDiv>
                 <button onClick={updateProfile}>Save Changes</button>
-                <button>Cancel</button>
+                <Link to="/"><button>Cancel</button></Link>
             </ButtonDiv>
         </EditForm>
     )
