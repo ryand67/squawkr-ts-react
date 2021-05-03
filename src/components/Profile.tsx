@@ -17,7 +17,7 @@ function Profile() {
 
     let { username } = useParams();
     const [profileEmail, setProfileEmail] = useState<String>(username.substr(10));
-    const [userInfo, setUserInfo] = useState<UserInfoType>({email: '', username: '', bio: ''});
+    const [userInfo, setUserInfo] = useState<UserInfoType>({email: '', username: '', bio: '', name: ''});
     const [posts, setPosts] = useState<Post []>([]);
 
     const getUserInfo = (): void => {
@@ -27,7 +27,8 @@ function Profile() {
                 let holder: UserInfoType = {
                     email: '',
                     username: 'User Does Not Exist',
-                    bio: ''
+                    bio: '',
+                    name: ''
                 }
                 setUserInfo(holder);
                 userExists = false;
@@ -35,7 +36,8 @@ function Profile() {
                 let holder: UserInfoType = {
                     email: res.docs[0].data().email,
                     username: res.docs[0].data().username,
-                    bio: res.docs[0].data().bio
+                    bio: res.docs[0].data().bio,
+                    name: res.docs[0].data().name
                 }
                 setUserInfo(holder);
                 userExists = true;

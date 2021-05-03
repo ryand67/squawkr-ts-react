@@ -14,4 +14,5 @@ export interface UserInfoType {
     email: string;
     username: string;
     bio: string;
+    name: string;
 }

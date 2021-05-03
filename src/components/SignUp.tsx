@@ -53,6 +53,7 @@ function SignUp() {
             email: email,
             username: username,
             bio: bio,
+            name: name
           });
         })
         .catch((err) => {
