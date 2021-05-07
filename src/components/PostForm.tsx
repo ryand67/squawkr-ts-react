@@ -8,11 +8,13 @@ import styled from 'styled-components';
 function PostForm() {
 
     const [user] = useAuthState(auth);
-    const [username, setUsername] = useState<string>('')
+    const [username, setUsername] = useState<string>('');
+    const [name, setName] = useState<string>('');
 
     useEffect(() => {
         db.collection('users').where('email', '==', user?.email).get().then((res) => {
             res.forEach(item => {
+                setName(item.data().name);
                 setUsername(item.data().username);
             })
         });
@@ -37,6 +39,7 @@ function PostForm() {
             authorUsername: username,
             authorEmail: user?.email,
             content: post,
+            authorName: name,
             postedDate
         }).then(() => {
             setPost('');

@@ -22,14 +22,16 @@ function Home() {
 
     const grabPosts = (limitIncrementAmt: number) => {
         setPostLimit(postLimit + limitIncrementAmt);
-        console.log(postLimit);
         let postsHolder: Post[] = [];
         db.collection('posts').limit(postLimit || limitIncrementAmt).orderBy('postedDate', 'desc').get().then(res => {
             res.forEach(item => {
-                const holder: Post = { content: item.data().content,
+                console.log(item.data());
+                const holder: Post = { 
+                    content: item.data().content,
                     authorEmail: item.data().authorEmail,
                     authorUsername: item.data().authorUsername,
                     postedDate: item.data().postedDate,
+                    authorName: item.data().authorName,
                     id: item.id
                 };
 
@@ -51,7 +53,8 @@ function Home() {
             <PostForm />
             <PostContainer>
                 {posts.map(post => {
-                    return <PostCard email={post.authorEmail} content={post.content} author={post.authorUsername} date={post.postedDate} id={post.id} key={post.id} />
+                    console.log(post.authorName);
+                    return <PostCard authorName={post.authorName} email={post.authorEmail} content={post.content} author={post.authorUsername} date={post.postedDate} id={post.id} key={post.id} />
                 })}
             </PostContainer>
             <LoadMoreButton onClick={() => grabPosts(30)}>Load More</LoadMoreButton>

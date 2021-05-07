@@ -15,10 +15,11 @@ interface Props {
     id: string;
     date: fbDate | Date;
     author: string;
+    authorName: string | undefined;
     email: string;
 }
 
-function Post({ content, id, date, author, email }: Props) {
+function Post({ content, id, date, author, email, authorName }: Props) {
 
     const [user] = useAuthState(auth);
     
@@ -36,6 +37,7 @@ function Post({ content, id, date, author, email }: Props) {
     return (
         <PostCard>
             {isPostOwner ? <DeleteButton onClick={() => handleDelete(id)}>X</DeleteButton> : ''}
+            <Link to={`/user/:username=${email}`}><Author>{authorName}</Author></Link>
             <Link to={`/user/:username=${email}`}><Author>@{author}</Author></Link>
             <Content>{content}</Content>
             <Date>{newDate}</Date>

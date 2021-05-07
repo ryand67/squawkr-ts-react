@@ -2,6 +2,7 @@ export interface Post {
     content: string;
     authorEmail: string;
     authorUsername: string;
+    authorName?: string;
     postedDate: fbDate;
     id: string;
 }

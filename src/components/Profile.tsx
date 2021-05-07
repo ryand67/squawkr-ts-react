@@ -15,13 +15,15 @@ function Profile() {
 
     const [user] = useAuthState(auth);
 
+    
     let { username } = useParams();
-    const [profileEmail, setProfileEmail] = useState<String>(username.substr(10));
+    const [profileEmail] = useState<String>(username.substr(10));
     const [userInfo, setUserInfo] = useState<UserInfoType>({email: '', username: '', bio: '', name: ''});
     const [posts, setPosts] = useState<Post []>([]);
+    
+    let isProfileOwnwer: Boolean = user?.email === profileEmail;
 
     const getUserInfo = (): void => {
-        let userExists: Boolean = false;
         db.collection('users').where('email', '==', profileEmail).get().then((res) => {
             if(res.docs.length === 0) {
                 let holder: UserInfoType = {
@@ -31,7 +33,6 @@ function Profile() {
                     name: ''
                 }
                 setUserInfo(holder);
-                userExists = false;
             } else {
                 let holder: UserInfoType = {
                     email: res.docs[0].data().email,
@@ -40,7 +41,6 @@ function Profile() {
                     name: res.docs[0].data().name
                 }
                 setUserInfo(holder);
-                userExists = true;
             }
         })
     }
@@ -53,6 +53,7 @@ function Profile() {
                     authorEmail: item.data().authorEmail,
                     authorUsername: item.data().authorUsername,
                     postedDate: item.data().postedDate,
+                    authorName: item.data().authorName,
                     id: item.id
                 };
 
@@ -70,6 +71,7 @@ function Profile() {
         } else {
             getUserPosts();
         }
+        console.log('asdf');
     }, [])
 
     return (
@@ -78,12 +80,12 @@ function Profile() {
                 <UsernameHeader>{userInfo.username === "User Does Not Exist" ? '': '@'}{userInfo.username}</UsernameHeader>
                 <NameHeader>{userInfo.username === 'User Does Not Exist' ? '' : userInfo.name}</NameHeader>
                 <BioHolder>{userInfo.bio}</BioHolder>
-                <Link to="/edit-profile"><EditProfileButton>Edit Profile</EditProfileButton></Link>
+                {isProfileOwnwer ? <Link to="/edit-profile"><EditProfileButton>Edit Profile</EditProfileButton></Link> : ''}
             </InfoContainer>
             {profileEmail === user?.email ? <PostForm /> : ''}
             <PostContainer>
                 {posts.map(post => {
-                    return <PostCard email={post.authorEmail} content={post.content} author={post.authorUsername} date={post.postedDate} id={post.id} key={post.id} />
+                    return <PostCard authorName={post.authorName} email={post.authorEmail} content={post.content} author={post.authorUsername} date={post.postedDate} id={post.id} key={post.id} />
                 })}
             </PostContainer>
         </ProfileContainer>
