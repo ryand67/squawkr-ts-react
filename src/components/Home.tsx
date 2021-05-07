@@ -13,15 +13,17 @@ function Home() {
 
     const [user] = useAuthState(auth);
 
+    const [postLimit, setPostLimit] = useState<number>(0);
     const [posts, setPosts] = useState<Post []>([])
 
     useEffect(() => {
-        grabPosts();
+        grabPosts(30);
     }, [])
 
-    const grabPosts = () => {
+    const grabPosts = (limitAmt: number) => {
+        setPostLimit(postLimit + limitAmt);
         let postsHolder: Post[] = [];
-        db.collection('posts').orderBy('postedDate', 'desc').get().then(res => {
+        db.collection('posts').limit(postLimit || limitAmt).orderBy('postedDate', 'desc').get().then(res => {
             res.forEach(item => {
                 const holder: Post = { content: item.data().content,
                     authorEmail: item.data().authorEmail,
@@ -51,6 +53,7 @@ function Home() {
                     return <PostCard email={post.authorEmail} content={post.content} author={post.authorUsername} date={post.postedDate} id={post.id} key={post.id} />
                 })}
             </PostContainer>
+            <LoadMoreButton>Load More</LoadMoreButton>
         </HomeContainer>
     )
 }
@@ -76,5 +79,7 @@ const PostContainer = styled.div`
     min-height: 50vh;
     background-color: red;
 `;
+
+const LoadMoreButton = styled.button``;
 
 export default Home
