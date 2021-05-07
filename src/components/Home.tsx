@@ -20,10 +20,11 @@ function Home() {
         grabPosts(30);
     }, [])
 
-    const grabPosts = (limitAmt: number) => {
-        setPostLimit(postLimit + limitAmt);
+    const grabPosts = (limitIncrementAmt: number) => {
+        setPostLimit(postLimit + limitIncrementAmt);
+        console.log(postLimit);
         let postsHolder: Post[] = [];
-        db.collection('posts').limit(postLimit || limitAmt).orderBy('postedDate', 'desc').get().then(res => {
+        db.collection('posts').limit(postLimit || limitIncrementAmt).orderBy('postedDate', 'desc').get().then(res => {
             res.forEach(item => {
                 const holder: Post = { content: item.data().content,
                     authorEmail: item.data().authorEmail,
@@ -53,7 +54,7 @@ function Home() {
                     return <PostCard email={post.authorEmail} content={post.content} author={post.authorUsername} date={post.postedDate} id={post.id} key={post.id} />
                 })}
             </PostContainer>
-            <LoadMoreButton>Load More</LoadMoreButton>
+            <LoadMoreButton onClick={() => grabPosts(30)}>Load More</LoadMoreButton>
         </HomeContainer>
     )
 }
