@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { auth, db } from '../util/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useCollection } from 'react-firebase-hooks/firestore';
 import { Link } from 'react-router-dom';
 
 import PostForm from './PostForm';
@@ -11,10 +12,16 @@ import { Post } from '../util/Interfaces';
 
 function Home() {
 
+    const [snapshot] = useCollection(db.collection('posts').orderBy('postedDate', 'desc'));
+
     const [user] = useAuthState(auth);
 
     const [postLimit, setPostLimit] = useState<number>(0);
     const [posts, setPosts] = useState<Post []>([])
+
+    useEffect(() => {
+        grabPosts(1);
+    }, [snapshot])
 
     useEffect(() => {
         grabPosts(30);
