@@ -24,6 +24,7 @@ function Post({ content, id, date, author, email, authorName }: Props) {
 
     const postRef = db.collection('posts').doc(id);
     const [likeAmount, setLikeAmount] = useState<number>(0);
+    const [liked, setLiked] = useState<boolean>(false);
 
     const [user] = useAuthState(auth);
     
@@ -40,12 +41,31 @@ function Post({ content, id, date, author, email, authorName }: Props) {
 
     const getLikes = () => {
         postRef.get().then(res => {
+            if(res.data()?.likes.includes(user?.email)) {
+                setLiked(true);
+            } else {
+                setLiked(false);
+            }
             setLikeAmount(res.data()?.likes.length);
         })
     }
 
     const handleLikeUpdate = () => {
-        console.log('asdf');
+        postRef.get().then(res => {
+            const currentLikes = res.data()?.likes;
+            if(!currentLikes.includes(user?.email)) {
+                currentLikes.push(user?.email);
+                postRef.update({
+                    likes: currentLikes
+                })
+            } else {
+                let currentUserLike = currentLikes.indexOf(user?.email);
+                currentLikes.splice(currentUserLike);
+                postRef.update({
+                    likes: currentLikes
+                })
+            }
+        })
     }
 
     useEffect(() => {
@@ -59,7 +79,7 @@ function Post({ content, id, date, author, email, authorName }: Props) {
             <Link to={`/user/:username=${email}`}><Author>@{author}</Author></Link>
             <Content>{content}</Content>
             <Date>{newDate}</Date>
-            <Likes onClick={() => handleLikeUpdate()}>♥ {likeAmount}</Likes>
+            <Likes onClick={() => handleLikeUpdate()}>{!liked ? '♥' : 'x'} {likeAmount}</Likes>
         </PostCard>
     )
 }
