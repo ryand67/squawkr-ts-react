@@ -40,7 +40,8 @@ function PostForm() {
             authorEmail: user?.email,
             content: post,
             authorName: name,
-            postedDate
+            postedDate,
+            likes: []
         }).then(() => {
             setPost('');
             setCharCount(0);

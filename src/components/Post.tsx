@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { convertTimestamp } from 'convert-firebase-timestamp';
 import { Link } from 'react-router-dom';
@@ -21,6 +22,9 @@ interface Props {
 
 function Post({ content, id, date, author, email, authorName }: Props) {
 
+    const postRef = db.collection('posts').doc(id);
+    const [likeAmount, setLikeAmount] = useState<number>(0);
+
     const [user] = useAuthState(auth);
     
     //Checks if person who is logged in is the person who wrote the post.
@@ -29,10 +33,24 @@ function Post({ content, id, date, author, email, authorName }: Props) {
     let newDate = convertTimestamp(date).toString().substr(0, 24);
 
     const handleDelete = (id: string): void => {
-        db.collection('posts').doc(id).delete().then(() => {
+        postRef.delete().then(() => {
             window.location.reload();
         })
     }
+
+    const getLikes = () => {
+        postRef.get().then(res => {
+            setLikeAmount(res.data()?.likes.length);
+        })
+    }
+
+    const handleLikeUpdate = () => {
+        console.log('asdf');
+    }
+
+    useEffect(() => {
+        getLikes();
+    })
 
     return (
         <PostCard>
@@ -41,6 +59,7 @@ function Post({ content, id, date, author, email, authorName }: Props) {
             <Link to={`/user/:username=${email}`}><Author>@{author}</Author></Link>
             <Content>{content}</Content>
             <Date>{newDate}</Date>
+            <Likes onClick={() => handleLikeUpdate()}>♥ {likeAmount}</Likes>
         </PostCard>
     )
 }
@@ -73,5 +92,7 @@ const DeleteButton = styled.p`
     top: 0;
     right: 0;
 `;
+
+const Likes = styled.p``;
 
 export default Post

@@ -5,6 +5,7 @@ export interface Post {
     authorName?: string;
     postedDate: fbDate;
     id: string;
+    likes?: string[];
 }
 export type fbDate = {
     seconds: number;

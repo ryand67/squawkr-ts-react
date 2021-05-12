@@ -32,7 +32,6 @@ function Home() {
         let postsHolder: Post[] = [];
         db.collection('posts').limit(postLimit || limitIncrementAmt).orderBy('postedDate', 'desc').get().then(res => {
             res.forEach(item => {
-                console.log(item.data());
                 const holder: Post = { 
                     content: item.data().content,
                     authorEmail: item.data().authorEmail,
@@ -60,7 +59,6 @@ function Home() {
             <PostForm />
             <PostContainer>
                 {posts.map(post => {
-                    console.log(post.authorName);
                     return <PostCard authorName={post.authorName} email={post.authorEmail} content={post.content} author={post.authorUsername} date={post.postedDate} id={post.id} key={post.id} />
                 })}
             </PostContainer>
