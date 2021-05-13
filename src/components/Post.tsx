@@ -127,6 +127,8 @@ const DeleteButton = styled.p`
     right: 0;
 `;
 
-const Likes = styled.p``;
+const Likes = styled.p`
+    padding-bottom: 1rem;
+`;
 
 export default Post
