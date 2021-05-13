@@ -4,6 +4,7 @@ import { convertTimestamp } from 'convert-firebase-timestamp';
 import { Link } from 'react-router-dom';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useDocument } from 'react-firebase-hooks/firestore';
 import { auth, db } from '../util/firebase';
 
 export type fbDate = {
@@ -28,6 +29,8 @@ function Post({ content, id, date, author, email, authorName }: Props) {
     const [likeAmount, setLikeAmount] = useState<number>(0);
     // whether the current user has liked the post
     const [liked, setLiked] = useState<boolean>(false);
+
+    const [snapshot] = useDocument(postRef);
 
     const [user] = useAuthState(auth);
     
@@ -81,7 +84,7 @@ function Post({ content, id, date, author, email, authorName }: Props) {
     // On mount get the likes
     useEffect(() => {
         getLikes();
-    }, [])
+    }, [snapshot])
 
     return (
         <PostCard>
