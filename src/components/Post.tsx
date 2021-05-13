@@ -22,8 +22,11 @@ interface Props {
 
 function Post({ content, id, date, author, email, authorName }: Props) {
 
+    // Ref to the post
     const postRef = db.collection('posts').doc(id);
+    // likeAmount: how many times the post has been liked
     const [likeAmount, setLikeAmount] = useState<number>(0);
+    // whether the current user has liked the post
     const [liked, setLiked] = useState<boolean>(false);
 
     const [user] = useAuthState(auth);
@@ -33,31 +36,38 @@ function Post({ content, id, date, author, email, authorName }: Props) {
     
     let newDate = convertTimestamp(date).toString().substr(0, 24);
 
+    // Deletes the post
     const handleDelete = (id: string): void => {
         postRef.delete().then(() => {
             window.location.reload();
         })
     }
 
+    // Gets the like info
     const getLikes = () => {
         postRef.get().then(res => {
+            // If the current user has liked the post, setLiked status accordingly
             if(res.data()?.likes.includes(user?.email)) {
                 setLiked(true);
             } else {
                 setLiked(false);
             }
+            // Sets the amount of likes based on liked array length
             setLikeAmount(res.data()?.likes.length);
         })
     }
 
+    // Fires when the user clicks the like button
     const handleLikeUpdate = () => {
         postRef.get().then(res => {
             const currentLikes = res.data()?.likes;
+            // If the current user has liked the post update the liked list to include the current user
             if(!currentLikes.includes(user?.email)) {
                 currentLikes.push(user?.email);
                 postRef.update({
                     likes: currentLikes
                 })
+            // Else remove the user from the liked list
             } else {
                 let currentUserLike = currentLikes.indexOf(user?.email);
                 currentLikes.splice(currentUserLike);
@@ -68,9 +78,10 @@ function Post({ content, id, date, author, email, authorName }: Props) {
         })
     }
 
+    // On mount get the likes
     useEffect(() => {
         getLikes();
-    })
+    }, [])
 
     return (
         <PostCard>
