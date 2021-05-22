@@ -93,7 +93,7 @@ function Post({ content, id, date, author, email, authorName }: Props) {
             <Link to={`/user/:username=${email}`}><Author>@{author}</Author></Link>
             <Content>{content}</Content>
             <Date>{newDate}</Date>
-            <Likes onClick={() => handleLikeUpdate()}>{!liked ? '♥' : 'x'} {likeAmount}</Likes>
+            <Likes onClick={() => handleLikeUpdate()}>{!liked ? '♥' : 'x'} Likes: {likeAmount}</Likes>
         </PostCard>
     )
 }
