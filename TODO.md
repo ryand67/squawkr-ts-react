@@ -1,4 +1,4 @@
 # TODO 
 
-* Like function
+* Search bar
 * Following
