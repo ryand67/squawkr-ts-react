@@ -115,12 +115,15 @@ const Author = styled.h1`
 `;
 
 const Content = styled.p`
-    margin: 0;
+    margin: .5rem 0;
     padding: 0;
     font-size: 1.5rem;
 `;
 
-const Date = styled.p``;
+const Date = styled.p`
+    margin: 0;
+    padding: 0;
+`;
 
 const DeleteButton = styled.p`
     position: absolute;
