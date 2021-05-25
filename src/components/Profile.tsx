@@ -14,14 +14,37 @@ import PostForm from './PostForm';
 function Profile() {
 
     const [user] = useAuthState(auth);
-
     
     let { username } = useParams();
     const [profileEmail] = useState<String>(username.substr(10));
-    const [userInfo, setUserInfo] = useState<UserInfoType>({email: '', username: '', bio: '', name: ''});
+    const [userInfo, setUserInfo] = useState<UserInfoType>({email: '', username: '', bio: '', name: '', followers: 0, following: 0});
     const [posts, setPosts] = useState<Post []>([]);
+    const [following, setFollowing] = useState<Boolean>();
     
     let isProfileOwnwer: Boolean = user?.email === profileEmail;
+
+    const handleFollow = (): void => {
+        if(following) {
+            db.collection('users').where('email', '==', user?.email).get().then(res => {
+                console.log(res);
+            })
+        } else {
+            
+        }
+    }
+
+    const findIfFollowing = (): void => {
+        // had to put email in this variable to get around typescript being weird, probably should revisit
+        let emailHolder: string | null | undefined = user?.email;
+        db.collection('users').where('email', '==', emailHolder).get().then(res => {
+            let data = res.docs[0].data();
+            if(data.followers.includes(user?.email)) {
+                setFollowing(true);
+            } else {
+                setFollowing(false);
+            }
+        })
+    }
 
     const getUserInfo = (): void => {
         db.collection('users').where('email', '==', profileEmail).get().then((res) => {
@@ -30,15 +53,20 @@ function Profile() {
                     email: '',
                     username: 'User Does Not Exist',
                     bio: '',
-                    name: ''
+                    name: '',
+                    followers: 0,
+                    following: 0
                 }
                 setUserInfo(holder);
             } else {
+                console.log(res.docs[0].data());
                 let holder: UserInfoType = {
                     email: res.docs[0].data().email,
                     username: res.docs[0].data().username,
                     bio: res.docs[0].data().bio,
-                    name: res.docs[0].data().name
+                    name: res.docs[0].data().name,
+                    followers: res.docs[0].data().followers.length,
+                    following: res.docs[0].data().following.length
                 }
                 setUserInfo(holder);
             }
@@ -65,13 +93,13 @@ function Profile() {
     }
 
     useEffect((): void => {
+        findIfFollowing();
         getUserInfo();
         if(userInfo.username === "User Does Not Exist") {
             return;
         } else {
             getUserPosts();
         }
-        console.log('asdf');
     }, [])
 
     return (
@@ -80,7 +108,8 @@ function Profile() {
                 <UsernameHeader>{userInfo.username === "User Does Not Exist" ? '': '@'}{userInfo.username}</UsernameHeader>
                 <NameHeader>{userInfo.username === 'User Does Not Exist' ? '' : userInfo.name}</NameHeader>
                 <BioHolder>{userInfo.bio}</BioHolder>
-                {isProfileOwnwer ? <Link to="/edit-profile"><EditProfileButton>Edit Profile</EditProfileButton></Link> : ''}
+                <FollowerInfo>Following: {userInfo.following} Followers: {userInfo.followers}</FollowerInfo>
+                {isProfileOwnwer ? <Link to="/edit-profile"><EditProfileButton>Edit Profile</EditProfileButton></Link> : <FollowButton onClick={() => handleFollow()}>{following ? 'Unfollow' : 'Follow'}</FollowButton>}
             </InfoContainer>
             {profileEmail === user?.email ? <PostForm /> : ''}
             <PostContainer>
@@ -133,5 +162,11 @@ const PostContainer = styled.div`
     width: 100%;
     height: auto;
 `;
+
+const FollowButton = styled.button`
+    width: 25%;
+`;
+
+const FollowerInfo = styled.p``;
 
 export default Profile

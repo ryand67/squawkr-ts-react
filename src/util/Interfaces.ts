@@ -17,4 +17,6 @@ export interface UserInfoType {
     username: string;
     bio: string;
     name: string;
+    followers: number;
+    following: number;
 }
