@@ -53,7 +53,9 @@ function SignUp() {
             email: email,
             username: username,
             bio: bio,
-            name: name
+            name: name,
+            followers: [],
+            following: []
           });
         })
         .catch((err) => {

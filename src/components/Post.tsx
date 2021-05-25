@@ -106,25 +106,26 @@ const PostCard = styled.div`
     min-height: 3rem;
     text-align: left;
     color: white;
-    
-    * {
-        padding: 0 1em;
-    }
 `;
 
 const Author = styled.h1`
+    font-size: 1rem;
     margin: 0;
     padding: 0;
 `;
 
-const Content = styled.p``;
+const Content = styled.p`
+    margin: 0;
+    padding: 0;
+    font-size: 1.5rem;
+`;
 
 const Date = styled.p``;
 
 const DeleteButton = styled.p`
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 10px;
+    right: 10px;
 `;
 
 const Likes = styled.p`
