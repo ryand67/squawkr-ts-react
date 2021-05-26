@@ -1,6 +1,6 @@
 import './App.css';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from './util/firebase';
+import { auth, db } from './util/firebase';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 import styled from 'styled-components';

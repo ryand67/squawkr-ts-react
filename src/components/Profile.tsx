@@ -14,31 +14,67 @@ import PostForm from './PostForm';
 function Profile() {
 
     const [user] = useAuthState(auth);
+
     
     let { username } = useParams();
-    const [profileEmail] = useState<String>(username.substr(10));
+    const [profileEmail] = useState<string>(username.substr(10));
     const [userInfo, setUserInfo] = useState<UserInfoType>({email: '', username: '', bio: '', name: '', followers: 0, following: 0});
+    const [followerCount, setFollowerCount] = useState<number>(0);
+    const [followingCount, setFollowingCount] = useState<number>(0);
     const [posts, setPosts] = useState<Post []>([]);
     const [following, setFollowing] = useState<Boolean>();
     
     let isProfileOwnwer: Boolean = user?.email === profileEmail;
 
     const handleFollow = (): void => {
+        //Unfollow
         if(following) {
+            //Unfollow user
             db.collection('users').where('email', '==', user?.email).get().then(res => {
-                console.log(res);
+                let followingHolder = res.docs[0].data().following;
+                let indexHolder: number = followingHolder.indexOf(profileEmail);
+                followingHolder.splice(indexHolder);
+                db.collection('users').doc(res.docs[0].id).update({
+                    following: followingHolder
+                })
+            }) 
+
+            // Update unfollowing on profile
+            db.collection('users').where('email', '==', profileEmail).get().then(res => {
+                let followerHolder = res.docs[0].data().followers;
+                let indexHolder: number = followerHolder.indexOf(user?.email);
+                followerHolder.splice(indexHolder);
+                db.collection('users').doc(res.docs[0].id).update({
+                    followers: followerHolder
+                })
             })
         } else {
-            
+            //Follow user
+            db.collection('users').where('email', '==', user?.email).get().then(res => {
+                let followingHolder = res.docs[0].data().following;
+                followingHolder.push(profileEmail);
+                db.collection('users').doc(res.docs[0].id).update({
+                    following: followingHolder
+                })
+            })
+
+            // Update following on profile
+            db.collection('users').where('email', '==', profileEmail).get().then(res => {
+                let followerHolder = res.docs[0].data().followers;
+                followerHolder.push(user?.email);
+                db.collection('users').doc(res.docs[0].id).update({
+                    followers: followerHolder
+                })
+            })
         }
+        setFollowing(!following);
     }
 
+    //NEED TO FIND A WAY TO GRAB THE USER INFO WITH THE TYPESCRIPT NONSENSE WITH THE USER?.EMAIL THING
     const findIfFollowing = (): void => {
-        // had to put email in this variable to get around typescript being weird, probably should revisit
-        let emailHolder: string | null | undefined = user?.email;
-        db.collection('users').where('email', '==', emailHolder).get().then(res => {
-            let data = res.docs[0].data();
-            if(data.followers.includes(user?.email)) {
+        db.collection('users').doc('').get().then(res => {
+            let data = res.data();
+            if(!data?.following.includes(user?.email)) {
                 setFollowing(true);
             } else {
                 setFollowing(false);
@@ -68,6 +104,8 @@ function Profile() {
                     followers: res.docs[0].data().followers.length,
                     following: res.docs[0].data().following.length
                 }
+                setFollowerCount(res.docs[0].data().followers.length);
+                setFollowingCount(res.docs[0].data().following.length);
                 setUserInfo(holder);
             }
         })
@@ -93,8 +131,8 @@ function Profile() {
     }
 
     useEffect((): void => {
-        findIfFollowing();
         getUserInfo();
+        findIfFollowing();
         if(userInfo.username === "User Does Not Exist") {
             return;
         } else {
@@ -108,7 +146,7 @@ function Profile() {
                 <UsernameHeader>{userInfo.username === "User Does Not Exist" ? '': '@'}{userInfo.username}</UsernameHeader>
                 <NameHeader>{userInfo.username === 'User Does Not Exist' ? '' : userInfo.name}</NameHeader>
                 <BioHolder>{userInfo.bio}</BioHolder>
-                <FollowerInfo>Following: {userInfo.following} Followers: {userInfo.followers}</FollowerInfo>
+                <FollowerInfo>Following: {followingCount} Followers: {followerCount}</FollowerInfo>
                 {isProfileOwnwer ? <Link to="/edit-profile"><EditProfileButton>Edit Profile</EditProfileButton></Link> : <FollowButton onClick={() => handleFollow()}>{following ? 'Unfollow' : 'Follow'}</FollowButton>}
             </InfoContainer>
             {profileEmail === user?.email ? <PostForm /> : ''}
@@ -142,7 +180,7 @@ const InfoContainer = styled.div`
 `;
 
 const UsernameHeader = styled.h1`
-    padding: 0 1em;
+    padding: 0 .5em;
 `;
 
 const NameHeader = styled.h3`
