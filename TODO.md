@@ -1,4 +1,4 @@
 # TODO 
 
 * Search bar
-* Following
+* Following function with the user?.email nonsense
