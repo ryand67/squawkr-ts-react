@@ -71,16 +71,16 @@ function Profile() {
     }
 
     //NEED TO FIND A WAY TO GRAB THE USER INFO WITH THE TYPESCRIPT NONSENSE WITH THE USER?.EMAIL THING
-    const findIfFollowing = (): void => {
-        db.collection('users').doc('').get().then(res => {
-            let data = res.data();
-            if(!data?.following.includes(user?.email)) {
-                setFollowing(true);
-            } else {
-                setFollowing(false);
-            }
-        })
-    }
+    // const findIfFollowing = (): void => {
+    //     db.collection('users').doc('').get().then(res => {
+    //         let data = res.data();
+    //         if(!data?.following.includes(user?.email)) {
+    //             setFollowing(true);
+    //         } else {
+    //             setFollowing(false);
+    //         }
+    //     })
+    // }
 
     const getUserInfo = (): void => {
         db.collection('users').where('email', '==', profileEmail).get().then((res) => {
@@ -132,7 +132,7 @@ function Profile() {
 
     useEffect((): void => {
         getUserInfo();
-        findIfFollowing();
+        // findIfFollowing();
         if(userInfo.username === "User Does Not Exist") {
             return;
         } else {
