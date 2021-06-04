@@ -10,6 +10,7 @@ import Credentials from './components/Credentials';
 import HomeContainer from './components/Home';
 import Profile from './components/Profile';
 import EditProfile from './components/EditProfile';
+import SearchBar from './components/SearchBar';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
         <Link to={`/`}>
           <LogoHeader>
             <h1 style={{ cursor: 'pointer' }}>SQUAWKR</h1>
+            <SearchBar />
           </LogoHeader>
         </Link>
         <Switch>
